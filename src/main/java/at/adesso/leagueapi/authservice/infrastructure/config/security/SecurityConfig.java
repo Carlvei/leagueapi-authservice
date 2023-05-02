@@ -13,10 +13,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity) {
         try {
-            httpSecurity.cors().disable()
+            httpSecurity
+                    .cors().disable()
                     .csrf().disable()
                     .authorizeHttpRequests((requests) -> requests
-                            .requestMatchers("/**").permitAll()
+                            .requestMatchers("/authorization/**").permitAll()
                             .anyRequest().authenticated());
 
             return httpSecurity.build();

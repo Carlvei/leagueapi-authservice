@@ -1,6 +1,9 @@
 server:
   port: 8081
-
+spring:
+  mvc:
+    servlet:
+      path: /api/authservice
 jwt:
   key:
     secret: Ycad*ERRM^+wA?9X4mtPFh6+V+ybMvGFjqb5MzvG=ZPmRPFs6W**t%UkVuz^3mWp8E*-_baZgKHweJJQsd42uAZ*jNPKUshHwNs7mjKy+MV--5=-j4aL3!UgrqSAEd6dtG$R7y6UwSW7TUM=4-+JbZE!Y=QaF!t44BcMS=9dFTy*CxFQ8T8XytLj9yL5*rMq$^sRF3f4AhL6QJYnFRDz+dLgDgRb^xA%zQbeDRJfkr^7=y?KGrJNU+7#^cKFbx8w
