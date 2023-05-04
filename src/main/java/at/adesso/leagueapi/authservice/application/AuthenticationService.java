@@ -4,6 +4,7 @@ import at.adesso.leagueapi.authservice.domain.users.model.Credentials;
 import at.adesso.leagueapi.authservice.domain.users.model.TokenPair;
 import at.adesso.leagueapi.authservice.domain.users.model.UserData;
 import at.adesso.leagueapi.authservice.domain.users.repository.UserRepository;
+import at.adesso.leagueapi.commons.domain.Role;
 import at.adesso.leagueapi.commons.errorhandling.exceptions.UnauthorizedAccessException;
 import at.adesso.leagueapi.commons.errorhandling.exceptions.ValidationFailedException;
 import at.adesso.leagueapi.commons.util.jwt.JwtTokenGenerator;
@@ -35,13 +36,14 @@ public class AuthenticationService {
         checkIfUserNameAlreadyExists(credentials.getUserName());
         return userRepository.save(UserData.builder()
                 .userName(credentials.getUserName())
+                .role(Role.USER)
                 .encrpytedPassword(passwordEncoder.encode(credentials.getPassword()))
                 .build());
     }
 
 
     private String generateAccessToken(final UserData userData) {
-        return jwtTokenGenerator.generateToken(userData.getId());
+        return jwtTokenGenerator.generateToken(userData.getId(), userData.getRole());
     }
 
     private void checkIfUserNameAlreadyExists(final String username) {

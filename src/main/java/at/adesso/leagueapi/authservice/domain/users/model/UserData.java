@@ -1,5 +1,6 @@
 package at.adesso.leagueapi.authservice.domain.users.model;
 
+import at.adesso.leagueapi.commons.domain.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,4 +21,5 @@ public class UserData {
     private String id;
     private String userName;
     private String encrpytedPassword;
+    private Role role;
 }
