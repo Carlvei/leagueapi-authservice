@@ -1,4 +1,4 @@
-package at.adesso.leagueapi.authservice.infrastructure.api.rest;
+package at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication;
 
 import at.adesso.leagueapi.authservice.application.AuthenticationService;
 import at.adesso.leagueapi.authservice.domain.users.model.TokenPair;
@@ -6,6 +6,7 @@ import at.adesso.leagueapi.authservice.domain.users.model.UserData;
 import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.mapper.AuthenticationMapper;
 import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.model.CredentialsDto;
 import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.model.TokenPairDto;
+import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.model.UserDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
