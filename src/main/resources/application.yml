@@ -9,4 +9,8 @@ spring:
 jwt:
   key:
     secret: ${SECRET:#{null}}
-    signature: nizUAflm9tROvVK9E7oAA2Xj7trLKS0SWWfJ3F5QHEd2YJTLCrDmlyLqH8X6RTHPze0KXD757BkqT2w9d2IdN8rm0SuTzZPTNX+u0gZR/IE=
+    signature: BeqbvWM1mem/MP887bU919s3AAQmFl6cdanzq5h7LZof9Cz2XsQcAXGuqGziW6t0zAkoB6bevoj/JYN/4sIPjWKoibQr3YsigC4Fiip6CN0=
+
+leagueapi:
+  services:
+    paths-without-authentication: /authentication/authenticate, /authentication/signup
