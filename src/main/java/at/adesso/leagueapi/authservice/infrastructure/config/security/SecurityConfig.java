@@ -25,4 +25,6 @@ public class SecurityConfig {
             throw new TechnicalException(exception);
         }
     }
+
+
 }

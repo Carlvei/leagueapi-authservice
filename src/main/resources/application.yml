@@ -24,3 +24,6 @@ leagueapi:
   services:
     paths-without-authentication: /authentication/authenticate, /authentication/signup
 
+logging:
+  level:
+    root: debug
