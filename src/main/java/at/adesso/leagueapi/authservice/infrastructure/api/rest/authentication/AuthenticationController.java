@@ -8,7 +8,10 @@ import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.mo
 import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.model.TokenPairDto;
 import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.model.UserDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/authentication")
@@ -23,7 +26,7 @@ public class AuthenticationController implements AuthenticationApi {
         this.authenticationMapper = authenticationMapper;
     }
 
-    @GetMapping("/authenticate")
+    @PostMapping("/authenticate")
     @Override
     public ResponseEntity<TokenPairDto> authenticate(@RequestBody final CredentialsDto credentialsDto) {
         final TokenPair tokenPair = authenticationService.authenticate(authenticationMapper.toCredentials(credentialsDto));
