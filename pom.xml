@@ -11,7 +11,7 @@
     </parent>
     <groupId>at.adesso.leagueapi</groupId>
     <artifactId>authservice</artifactId>
-    <version>0.3.2</version>
+    <version>0.3.3</version>
     <name>authservice</name>
     <description>authservice</description>
     <properties>

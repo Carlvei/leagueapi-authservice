@@ -53,7 +53,7 @@ public class AuthenticationService {
     }
 
     private void validatePassword(final UserData userData, final Credentials enteredCredentials) {
-        if (userData.getEncrpytedPassword().equals(enteredCredentials.getPassword())) {
+        if (!userData.getEncrpytedPassword().equals(passwordEncoder.encode(enteredCredentials.getPassword()))) {
             throw new UnauthorizedAccessException(getWrongCredentialsErrorMessage());
         }
     }
