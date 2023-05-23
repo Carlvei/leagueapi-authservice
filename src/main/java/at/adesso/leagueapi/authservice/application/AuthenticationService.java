@@ -1,6 +1,8 @@
 package at.adesso.leagueapi.authservice.application;
 
-import at.adesso.leagueapi.authservice.domain.users.model.Credentials;
+import at.adesso.leagueapi.authservice.application.errors.AuthorizationError;
+import at.adesso.leagueapi.authservice.domain.users.model.LoginData;
+import at.adesso.leagueapi.authservice.domain.users.model.SignUpData;
 import at.adesso.leagueapi.authservice.domain.users.model.TokenPair;
 import at.adesso.leagueapi.authservice.domain.users.model.UserData;
 import at.adesso.leagueapi.authservice.domain.users.repository.UserRepository;
@@ -8,12 +10,11 @@ import at.adesso.leagueapi.commons.domain.Role;
 import at.adesso.leagueapi.commons.errorhandling.exceptions.UnauthorizedAccessException;
 import at.adesso.leagueapi.commons.errorhandling.exceptions.ValidationFailedException;
 import at.adesso.leagueapi.commons.util.jwt.JwtTokenGenerator;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class AuthenticationService {
 
     private final UserRepository userRepository;
@@ -22,22 +23,35 @@ public class AuthenticationService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public TokenPair authenticate(final Credentials enteredCredentials) {
-        final UserData userData = userRepository.findUserByUserName(enteredCredentials.getUserName())
-                .orElseThrow(() -> new UnauthorizedAccessException(getWrongCredentialsErrorMessage()));
-        validatePassword(userData, enteredCredentials);
+    private final String salt;
+
+    public AuthenticationService(@Value("leagueapi.security.salt") final String salt,
+                                 final UserRepository userRepository,
+                                 final JwtTokenGenerator jwtTokenGenerator,
+                                 final PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.jwtTokenGenerator = jwtTokenGenerator;
+        this.passwordEncoder = passwordEncoder;
+        this.salt = salt;
+    }
+
+    public TokenPair authenticate(final LoginData enteredLoginData) {
+        final UserData userData = userRepository.findUserByEmail(enteredLoginData.getEmail())
+                .orElseThrow(() -> new UnauthorizedAccessException(AuthorizationError.CREDENTIALS_NOT_FOUND_ERROR));
+        validatePassword(userData, enteredLoginData);
         return TokenPair.builder()
                 .accessToken(generateAccessToken(userData))
                 .refreshToken("refreshToken")
                 .build();
     }
 
-    public UserData signup(final Credentials credentials) {
-        checkIfUserNameAlreadyExists(credentials.getUserName());
+    public UserData signup(final SignUpData signUpData) {
+        checkIfEmailAdressAlreadyExists(signUpData.getEmail());
         return userRepository.save(UserData.builder()
-                .userName(credentials.getUserName())
+                .email(signUpData.getEmail())
+                .username(signUpData.getUsername())
                 .role(Role.USER)
-                .encrpytedPassword(passwordEncoder.encode(credentials.getPassword()))
+                .encrpytedPassword(passwordEncoder.encode(signUpData.getPassword() + salt))
                 .build());
     }
 
@@ -46,19 +60,15 @@ public class AuthenticationService {
         return jwtTokenGenerator.generateToken(userData.getId(), userData.getRole());
     }
 
-    private void checkIfUserNameAlreadyExists(final String username) {
-        if (userRepository.findUserByUserName(username).isPresent()) {
+    private void checkIfEmailAdressAlreadyExists(final String email) {
+        if (userRepository.findUserByEmail(email).isPresent()) {
             throw new ValidationFailedException("Username is already given.");
         }
     }
 
-    private void validatePassword(final UserData userData, final Credentials enteredCredentials) {
-        if (!passwordEncoder.matches(enteredCredentials.getPassword(), userData.getEncrpytedPassword())) {
-            throw new UnauthorizedAccessException(getWrongCredentialsErrorMessage());
+    private void validatePassword(final UserData userData, final LoginData enteredLoginData) {
+        if (!passwordEncoder.matches(enteredLoginData.getPassword() + salt, userData.getEncrpytedPassword())) {
+            throw new UnauthorizedAccessException(AuthorizationError.CREDENTIALS_NOT_FOUND_ERROR);
         }
-    }
-
-    private String getWrongCredentialsErrorMessage() {
-        return "Couldn't find match for the entered credentials.";
     }
 }

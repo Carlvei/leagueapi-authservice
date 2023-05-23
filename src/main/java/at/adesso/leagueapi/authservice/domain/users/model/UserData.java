@@ -19,7 +19,8 @@ public class UserData {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String userName;
+    private String username;
+    private String email;
     private String encrpytedPassword;
     private Role role;
 }
