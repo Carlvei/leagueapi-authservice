@@ -1,12 +1,12 @@
 package at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication;
 
 import at.adesso.leagueapi.authservice.application.AuthenticationService;
-import at.adesso.leagueapi.authservice.domain.users.model.TokenPair;
+import at.adesso.leagueapi.authservice.domain.users.model.User;
 import at.adesso.leagueapi.authservice.domain.users.model.UserData;
 import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.mapper.AuthenticationMapper;
-import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.model.LoginDataDto;
-import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.model.SignupDataDto;
-import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.model.TokenPairDto;
+import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.model.LoginRequestDto;
+import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.model.SignupRequestDto;
+import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.model.SignupResponseDto;
 import at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.model.UserDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -24,26 +24,26 @@ public class AuthenticationController implements AuthenticationApi {
 
     private final AuthenticationMapper authenticationMapper;
 
-    public AuthenticationController(AuthenticationService authenticationService, AuthenticationMapper authenticationMapper) {
+    public AuthenticationController(final AuthenticationService authenticationService, final AuthenticationMapper authenticationMapper) {
         this.authenticationService = authenticationService;
         this.authenticationMapper = authenticationMapper;
     }
 
     @PostMapping("/authenticate")
     @Override
-    public ResponseEntity<TokenPairDto> authenticate(@RequestBody final LoginDataDto loginDataDto) {
-        final TokenPair tokenPair = authenticationService.authenticate(authenticationMapper.toLoginData(loginDataDto));
+    public ResponseEntity<UserDto> authenticate(@RequestBody final LoginRequestDto loginRequestDto) {
+        final User user = authenticationService.authenticate(authenticationMapper.toLoginData(loginRequestDto));
         return ResponseEntity
                 .ok()
-                .body(authenticationMapper.toTokenPairDto(tokenPair));
+                .body(authenticationMapper.toUserDto(user));
     }
 
     @PostMapping("/signup")
     @Override
-    public ResponseEntity<UserDto> signup(@RequestBody final SignupDataDto signupDataDto) {
-        final UserData userData = authenticationService.signup(authenticationMapper.toSignUpData(signupDataDto));
+    public ResponseEntity<SignupResponseDto> signup(@RequestBody final SignupRequestDto signupRequestDto) {
+        final UserData userData = authenticationService.signup(authenticationMapper.toSignUpData(signupRequestDto));
         return ResponseEntity
                 .ok()
-                .body(authenticationMapper.toUserDto(userData));
+                .body(authenticationMapper.toSignUpResponseDto(userData));
     }
 }

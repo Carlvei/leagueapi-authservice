@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
-public class SignupDataDto {
+public class SignupRequestDto {
 
     private String username;
 

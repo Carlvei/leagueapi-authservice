@@ -1,10 +1,7 @@
 package at.adesso.leagueapi.authservice.application;
 
 import at.adesso.leagueapi.authservice.application.errors.AuthorizationError;
-import at.adesso.leagueapi.authservice.domain.users.model.LoginData;
-import at.adesso.leagueapi.authservice.domain.users.model.SignUpData;
-import at.adesso.leagueapi.authservice.domain.users.model.TokenPair;
-import at.adesso.leagueapi.authservice.domain.users.model.UserData;
+import at.adesso.leagueapi.authservice.domain.users.model.*;
 import at.adesso.leagueapi.authservice.domain.users.repository.UserRepository;
 import at.adesso.leagueapi.commons.domain.Role;
 import at.adesso.leagueapi.commons.errorhandling.exceptions.UnauthorizedAccessException;
@@ -35,13 +32,16 @@ public class AuthenticationService {
         this.salt = salt;
     }
 
-    public TokenPair authenticate(final LoginData enteredLoginData) {
+    public User authenticate(final LoginData enteredLoginData) {
         final UserData userData = userRepository.findUserByEmail(enteredLoginData.getEmail())
                 .orElseThrow(() -> new UnauthorizedAccessException(AuthorizationError.CREDENTIALS_NOT_FOUND_ERROR));
         validatePassword(userData, enteredLoginData);
-        return TokenPair.builder()
-                .accessToken(generateAccessToken(userData))
-                .refreshToken("refreshToken")
+        return User.builder()
+                .user(userData)
+                .tokenPair(TokenPair.builder()
+                        .accessToken(generateAccessToken(userData))
+                        .refreshToken("refreshToken")
+                        .build())
                 .build();
     }
 
@@ -62,7 +62,7 @@ public class AuthenticationService {
 
     private void checkIfEmailAdressAlreadyExists(final String email) {
         if (userRepository.findUserByEmail(email).isPresent()) {
-            throw new ValidationFailedException("Username is already given.");
+            throw new ValidationFailedException("Email is already given.");
         }
     }
 
