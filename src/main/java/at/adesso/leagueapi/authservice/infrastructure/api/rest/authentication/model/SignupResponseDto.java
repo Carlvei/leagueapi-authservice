@@ -3,7 +3,7 @@ package at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.m
 import lombok.Data;
 
 @Data
-public class CredentialsDto {
-    private String userName;
-    private String password;
+public class SignupResponseDto {
+    private String username;
+    private String email;
 }

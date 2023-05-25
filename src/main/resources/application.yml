@@ -8,7 +8,7 @@ spring:
     import: optional:env/env.properties
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     show-sql: false
   datasource:
     url: jdbc:mysql://localhost:3306/authservice
@@ -23,7 +23,5 @@ jwt:
 leagueapi:
   services:
     paths-without-authentication: /authentication/authenticate, /authentication/signup
-
-logging:
-  level:
-    root: debug
+  security:
+    salt: qxF3dsBcwftfZdVu*T5IYy5ek3KMD@%O0X7uJlH7Lw8^b@3bV%

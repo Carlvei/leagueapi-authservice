@@ -1,10 +1,13 @@
 package at.adesso.leagueapi.authservice.infrastructure.api.rest.authentication.model;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
-public class UserDto {
-    private String username;
+public class LoginRequestDto {
+    @NotEmpty
     private String email;
-    private TokenPairDto tokenPair;
+
+    @NotEmpty
+    private String password;
 }
